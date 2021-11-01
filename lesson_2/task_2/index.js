@@ -7,13 +7,13 @@ const EVENT_TIMER_STOPPED = 'stopped';
 const EVENT_ALL_TIMER_STOPPED = 'all stopped';
 
 eventEmitter.on(EVENT_TIMER_STOPPED, timerId => {
-    console.log(`таймер №${timerId + 1}, остановлен.`)
+    console.log(`Timer №${timerId + 1}, stopped.`)
 });
 eventEmitter.on(EVENT_TIMER_STARTED, timerId => {
-    console.log(`таймер №${timerId + 1}, статус: ${timers[timerId].status}, времени осталось ${secondToString(timers[timerId].remainingTime)}`)
+    console.log(`Timer №${timerId + 1}, ststus: ${timers[timerId].status}, remaining time ${secondToString(timers[timerId].remainingTime)}`)
 });
 eventEmitter.on(EVENT_ALL_TIMER_STOPPED, () => {
-    console.log('Все таймеры остановлены');
+    console.log('All timers stopped');
 });
 
 const timers = []
