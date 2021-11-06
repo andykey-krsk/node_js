@@ -1,6 +1,7 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
-const readline = require("readline")
+const readline = require("readline");
+const colors = require("colors");
 
 const isFile = (filepath) => {
     return fs.lstatSync(filepath).isFile();
@@ -30,8 +31,10 @@ const promptUser = async (choices) => {
 }
 
 const showFileContents = async (filepath, pattern) => {
-    let i = 0;
     return new Promise((resolve) => {
+        let i = 0;
+        let finded = false;
+
         const stream = fs.createReadStream(filepath, 'utf-8');
 
         const rl = readline.createInterface({
@@ -41,10 +44,18 @@ const showFileContents = async (filepath, pattern) => {
         });
 
         rl.on('line', function (line) {
+            i++;
             if (line.indexOf(pattern) > 0) {
+                console.log(colors.green.bold(`В строке №${i} найден паттерн ${pattern}`));
                 console.log(line);
+                finded = true;
             }
         });
+
+        stream.on('end', ()=> {
+            if (!finded) console.log(colors.red.bold(`Паттерн - ${pattern} в файле не найден`));
+        })
+
     });
 }
 

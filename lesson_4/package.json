@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "inquirer": "^8.2.0",
-    "yargs": "^17.2.1"
+    "yargs": "^17.2.1",
+    "colors": "^1.4.0"
   },
   "author": "andy",
   "license": "ISC"
