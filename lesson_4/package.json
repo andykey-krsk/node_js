@@ -1,0 +1,16 @@
+{
+  "name": "lesson_4",
+  "version": "1.0.0",
+  "description": "cli program",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "inquirer": "^8.2.0",
+    "yargs": "^17.2.1",
+    "colors": "^1.4.0"
+  },
+  "author": "andy",
+  "license": "ISC"
+}
