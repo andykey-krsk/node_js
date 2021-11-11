@@ -1,44 +1,35 @@
 const fs = require('fs');
-const inquirer = require('inquirer');
 
 const isFile = (filepath) => {
     return fs.lstatSync(filepath).isFile();
 }
 
-const getFileNamesInDirectory = async (directory) => {
-    const itemsInDirectory = await new Promise((resolve) => {
-        fs.readdir(directory, (err, data) => {
-            resolve(data);
-        });
-    });
-
-    return itemsInDirectory;
+const getFileNamesInDirectory = (directory) => {
+    return fs.readdirSync(directory);
 }
 
-const promptUser = async (choices) => {
-    const optionKey = 'optionKey';
+const listFolders = (nameArray, folder) => {
+    let result = "<ul>";
+    if (nameArray.length <= 0) {
+        return 'no files';
+    }
 
-    const result = await inquirer.prompt([{
-        name: optionKey,
-        type: 'list',
-        message: 'Please choose a file to read',
-        choices,
-    }]);
-
-    return result[optionKey];
+    nameArray.forEach(item => {
+        result += "<li><a href=\'" + "?folder=" + folder + "\\" + item + "\'>" + item + "</a></li>";
+    })
+    return result + "</ul>";
 }
 
-const showFileContents = async (filepath) => {
-    return new Promise((resolve) => {
-        const stream = fs.createReadStream(filepath, 'utf-8');
-        stream.on('end', resolve);
-        stream.pipe(process.stdout);
-    });
+const showFileContents = (filepath) => {
+    const content = fs.readFileSync(filepath, 'utf-8');
+    let result = `<p>${content}</p>`;
+
+    return result.toString();
 }
 
 module.exports = {
     getFileNamesInDirectory,
-    promptUser,
+    listFolders,
     showFileContents,
     isFile,
 }
