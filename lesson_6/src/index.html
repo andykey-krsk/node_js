@@ -1,10 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
+
+<script src="https://cdn.socket.io/3.1.1/socket.io.min.js"
+        integrity="sha384-gDaozqUvc4HTgo8iZjwth73C6dDDeOJsAgpxBcMpZYztUfjHXpzrpdrHRdVp8ySO"
+        crossorigin="anonymous"></script>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Socket App</title>
 </head>
 <body>
 
+<div>
+    <label>
+        Name
+        <input type="text" id="name" autofocus value="User">
+    </label>
+    <button id="change-name">Change name</button>
+</div>
+<br>
+<button id="connect">Connect</button>
+<button id="disconnect">Disconnect</button>
+<br>
+<br>
+<br>
+<p>Users in chat: <span id="connect-count"></span></p>
+
+<br>
+<label>
+    Message
+    <input type="text" id="input">
+</label>
+
+<button id="send">Send message</button>
+
+<div id="messages"></div>
+
 </body>
+<script type="text/javascript">
+
+    const getRandomId = () => Math.floor(Math.random() * 100000);
+
+    const name = document.getElementById('name');
+
+    const reConnect = () =>{
+        socket.connect(true);
+    };
+
+    document.getElementById('connect').onclick = reConnect;
+
+    const disconnect = () =>{
+        socket.disconnect(true);
+    };
+
+    document.getElementById('disconnect').onclick = disconnect;
+
+    name.value += getRandomId();
+
+    const socket = io();
+
+    let username = name.value;
+
+    const counter = document.getElementById('connect-count');
+
+    const changeName = () =>{
+        if (name.value) {
+            username = name.value;
+            socket.emit('CHANGE_NAME', {username: username});
+        } else{
+            alert('Enter your name')
+        }
+    };
+
+    document.getElementById('change-name').onclick = changeName;
+
+    const setCounter = (count) =>{
+        const connectCounter = document.getElementById('connect-count');
+        connectCounter.innerHTML = count;
+    };
+
+    const sendMessage = () => {
+        socket.emit('CLIENT_MSG', {username: username, text: document.getElementById('input').value});
+        document.getElementById('input').value = '';
+    };
+
+    document.getElementById('send').onclick = sendMessage;
+
+    socket.on('connect', function () {
+        console.log('Successful connected to server');
+        socket.emit('CLIENT_CONNECT', {username})
+    });
+
+    const addMessage = (message) => {
+        const msgSpan = document.createElement('span').innerHTML = message.username + ": " + message.text;
+        document.getElementById('messages').append(msgSpan);
+        document.getElementById('messages').append(document.createElement('br'));
+    };
+
+    socket.on('SERVER_MSG', function (data) {
+        addMessage(data);
+    });
+
+    socket.on('CHANGE_COUNT',function (data){
+        setCounter(data.count)
+    });
+
+
+</script>
 </html>
